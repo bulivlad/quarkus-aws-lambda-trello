@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  trelloSpecificList:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: 'io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest'
+      Runtime: java8
+      CodeUri: .
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role: 'arn:aws:iam::573623542714:role/service-role/new-joiners-lambda-role'
+      Environment:
+        Variables:
+          quarkus.lambda.handler: trelloSpecificList
+      Events:
+        Schedule1:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 day)
+        SNS1:
+          Type: SNS
+          Properties:
+            Topic:
+              Ref: SNSTopic1
+  trelloCards:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: 'io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest'
+      Runtime: java8
+      CodeUri: .
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role: 'arn:aws:iam::573623542714:role/service-role/new-joiners-lambda-role'
+      Environment:
+        Variables:
+          quarkus.lambda.handler: trelloCards
+      SNS1:
+        Type: SNS
+        Properties:
+          Topic:
+            Ref: SNSTopic1
+  trelloCardsProcessor:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: 'io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest'
+      Runtime: java8
+      CodeUri: .
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role: 'arn:aws:iam::573623542714:role/service-role/new-joiners-lambda-role'
+      Environment:
+        Variables:
+          quarkus.lambda.handler: trelloCardsProcessor
+      SNS1:
+        Type: SNS
+        Properties:
+          Topic:
+            Ref: SNSTopic1
+  SNSTopic1:
+    Type: 'AWS::SNS::Topic'
