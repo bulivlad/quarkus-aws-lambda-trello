@@ -20,11 +20,6 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: rate(1 day)
-        SNS1:
-          Type: SNS
-          Properties:
-            Topic:
-              Ref: SNSTopic1
   trelloCards:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -38,11 +33,12 @@ Resources:
       Environment:
         Variables:
           quarkus.lambda.handler: trelloCards
-      SNS1:
-        Type: SNS
-        Properties:
-          Topic:
-            Ref: SNSTopic1
+      Events:
+        SNS1:
+          Type: SNS
+          Properties:
+            Topic:
+              Ref: SNSTopic1
   trelloCardsProcessor:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -56,10 +52,11 @@ Resources:
       Environment:
         Variables:
           quarkus.lambda.handler: trelloCardsProcessor
-      SNS1:
-        Type: SNS
-        Properties:
-          Topic:
-            Ref: SNSTopic1
-  SNSTopic1:
-    Type: 'AWS::SNS::Topic'
+      Events:
+        SNS1:
+          Type: SNS
+          Properties:
+            Topic:
+              Ref: SNSTopic1
+    SNSTopic1:
+      Type: 'AWS::SNS::Topic'
