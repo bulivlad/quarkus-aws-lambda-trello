@@ -26,9 +26,9 @@ public class TrelloSpecificListRetriever extends AbstractTrelloBoardListRetrieve
     public APIGatewayProxyResponseEvent handleRequest(TrelloSpecificListRequest input, Context context) {
         log.info("Got requested with body {}", input.toString());
 
-        ResponseWrapper<TrelloList> trelloResponse = boardListsService.getSpecificListByBoardAndList(input.getBody().getBoardId(), input.getBody().getListName());
-        TrelloList trelloList = boardListsService.convertSpecificListByBoardAndList(trelloResponse);
-        GatewayResponse response =  boardListsService.buildGatewayResponse(trelloResponse, trelloList);
+        ResponseWrapper<TrelloList> trelloResponse = listService.getSpecificListByBoardAndList(input.getBody().getBoardId(), input.getBody().getListName());
+        TrelloList trelloList = boardService.convertSpecificListByBoardAndList(trelloResponse);
+        GatewayResponse response =  boardService.buildGatewayResponse(trelloResponse, trelloList);
 
         return new APIGatewayProxyResponseEvent()
                 .withBody(objectMapper.writeValueAsString(response.getBody()))

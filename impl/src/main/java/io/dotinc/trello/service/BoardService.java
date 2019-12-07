@@ -3,23 +3,21 @@ package io.dotinc.trello.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.dotinc.trello.config.TrelloConfig;
 import io.dotinc.core.ResponseWrapper;
-import io.dotinc.trello.response.GatewayResponse;
+import io.dotinc.trello.config.TrelloConfig;
 import io.dotinc.trello.model.TrelloBoard;
 import io.dotinc.trello.model.TrelloCard;
 import io.dotinc.trello.model.TrelloList;
+import io.dotinc.trello.response.GatewayResponse;
 import lombok.extern.log4j.Log4j2;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @Singleton
-public class BoardListsService {
+public class BoardService {
 
     @Inject
     TrelloConfig trelloConfig;
@@ -37,16 +35,7 @@ public class BoardListsService {
     @RestClient
     BoardServiceRestClient boardServiceRestClient;
 
-    @Inject
-    @RestClient
-    ListServiceRestClient listServiceRestClient;
-
     ObjectMapper objectMapper = new ObjectMapper();
-
-    public List<TrelloList> convertListByBoardResponse(ResponseWrapper<List<TrelloList>> response) throws IOException {
-        String jsonResponse = response.getResponse().readEntity(String.class);
-        return objectMapper.readValue(jsonResponse, new TypeReference<List<TrelloList>>(){});
-    }
 
     public TrelloBoard convertBoardByIdResponse(ResponseWrapper<TrelloBoard> response) throws IOException {
         String jsonResponse = response.getResponse().readEntity(String.class);
@@ -96,16 +85,4 @@ public class BoardListsService {
         return new ResponseWrapper<>(boardServiceRestClient.getListsByBoard(boardId, trelloConfig.getKey(), trelloConfig.getToken()));
     }
 
-    public ResponseWrapper<TrelloList> getSpecificListByBoardAndList(String boardId, @NotNull String listName) throws IOException {
-        Optional<String> maybeTrelloListId = convertListByBoardResponse(getListsByBoard(boardId)).stream().filter(e -> e.getName().equals(listName)).map(TrelloList::getId).findFirst();
-        String trelloListId = maybeTrelloListId.orElse("");
-        log.info("Got list id " + trelloListId);
-
-        return new ResponseWrapper<>(listServiceRestClient.getSpecificListByBoardAndList(trelloListId, trelloConfig.getKey(), trelloConfig.getToken()));
-    }
-
-    public ResponseWrapper<List<TrelloCard>> getCardsByList(String listId) {
-        log.info("Got list id {}", listId);
-        return new ResponseWrapper<>(listServiceRestClient.getCardsByList(listId, trelloConfig.getKey(), trelloConfig.getToken()));
-    }
 }

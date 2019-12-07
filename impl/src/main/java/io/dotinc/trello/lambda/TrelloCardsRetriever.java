@@ -26,9 +26,9 @@ public class TrelloCardsRetriever extends AbstractTrelloBoardListRetriever imple
     public APIGatewayProxyResponseEvent handleRequest(TrelloCardsRequest input, Context context) {
         log.info("Got requested with body {}", input.toString());
 
-        ResponseWrapper<List<TrelloCard>> trelloResponse = boardListsService.getCardsByList(input.getListId());
-        List<TrelloCard> trelloList = boardListsService.convertCardsByList(trelloResponse);
-        GatewayResponse response =  boardListsService.buildGatewayResponseForTrelloCards(trelloResponse, trelloList);
+        ResponseWrapper<List<TrelloCard>> trelloResponse = listService.getCardsByList(input.getListId());
+        List<TrelloCard> trelloList = boardService.convertCardsByList(trelloResponse);
+        GatewayResponse response =  boardService.buildGatewayResponseForTrelloCards(trelloResponse, trelloList);
 
         return new APIGatewayProxyResponseEvent()
                 .withBody(objectMapper.writeValueAsString(response.getBody()))

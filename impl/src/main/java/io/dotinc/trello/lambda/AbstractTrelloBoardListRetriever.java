@@ -1,7 +1,8 @@
 package io.dotinc.trello.lambda;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.dotinc.trello.service.BoardListsService;
+import io.dotinc.trello.service.BoardService;
+import io.dotinc.trello.service.ListService;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -16,7 +17,10 @@ import javax.inject.Singleton;
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public class AbstractTrelloBoardListRetriever {
     @Inject
-    BoardListsService boardListsService;
+    BoardService boardService;
+
+    @Inject
+    ListService listService;
 
     ObjectMapper objectMapper = new ObjectMapper();
 }

@@ -28,10 +28,10 @@ public class TrelloBoardsRetriever extends AbstractTrelloBoardListRetriever impl
     public APIGatewayProxyResponseEvent handleRequest(TrelloBoardRequest input, Context context) {
         log.info("Got requested with body {}", input.toString());
 
-        ResponseWrapper<TrelloBoard> trelloResponse = boardListsService.getBoardById(input.getBoardId());
+        ResponseWrapper<TrelloBoard> trelloResponse = boardService.getBoardById(input.getBoardId());
 
-        TrelloBoard trelloBoard = boardListsService.convertBoardByIdResponse(trelloResponse);
-        GatewayResponse response = boardListsService.buildGatewayResponse(trelloResponse, trelloBoard);
+        TrelloBoard trelloBoard = boardService.convertBoardByIdResponse(trelloResponse);
+        GatewayResponse response = boardService.buildGatewayResponse(trelloResponse, trelloBoard);
 
         return new APIGatewayProxyResponseEvent()
                 .withBody(objectMapper.writeValueAsString(response.getBody()))
