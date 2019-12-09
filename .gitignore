@@ -34,3 +34,28 @@ build/
 target/
 impl/target/
 api/target/
+
+# Compiled files
+*.tfstate
+*.tfstate.backup
+*.tfexitcode
+
+# Module directory
+.terraform/
+.facts/
+# Python Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Inventory Files
+inv/*/*.yml
+inv/*/group_vars/all/idam.vault
+lambda/*/project.json
+lambda/*/functions/*/function.json
+
+# kubernetes
+.kube/
+
+# docker
+.env
